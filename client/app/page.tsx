@@ -6,7 +6,10 @@ import { io } from "socket.io-client"
 import { useDraw } from "@/hooks/useDraw"
 import { drawLine, type DrawLineProps } from "@/utils/drawLine"
 
-const socket = io("http://localhost:3001")
+
+const socket = io(process.env.NEXT_PUBLIC_API_URL as string)
+// console.log(process.env.NEXT_PUBLIC_API_URL)
+// const socket = io("http://localhost:3001")
 
 export default function Home() {
   const { canvasRef, onMouseDown, clear } = useDraw(createLine)

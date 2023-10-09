@@ -1,7 +1,7 @@
 "use client"
 import io from "socket.io-client"
 
-const socket = io.connect("http://localhost:3001")
+const socket = io("http://localhost:3001")
 
 export default function Message() {
   function handleClick() {
