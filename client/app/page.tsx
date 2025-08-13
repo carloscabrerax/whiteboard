@@ -8,7 +8,7 @@ import { drawLine, type DrawLineProps } from "@/utils/drawLine"
 
 
 const socket = io(process.env.NEXT_PUBLIC_API_URL as string)
-// console.log(process.env.NEXT_PUBLIC_API_URL)
+console.log(process.env.NEXT_PUBLIC_API_URL)
 // const socket = io("http://localhost:3001")
 
 export default function Home() {
@@ -59,7 +59,6 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-between p-24">
-      {/* <Message /> */}
       <div className="flex flex-row gap-2 mb-2">
         <button
           type="button"

@@ -1,7 +1,7 @@
 "use client"
 import io from "socket.io-client"
 
-const socket = io("http://localhost:3001")
+const socket = io(process.env.NEXT_PUBLIC_API_URL as string)
 
 export default function Message() {
   function handleClick() {
