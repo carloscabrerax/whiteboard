@@ -5,7 +5,6 @@ const socket = io(process.env.NEXT_PUBLIC_API_URL as string)
 
 export default function Message() {
   function handleClick() {
-    // console.log('hello')
     socket.emit("send_message", { message: "hello" })
   }
   return (

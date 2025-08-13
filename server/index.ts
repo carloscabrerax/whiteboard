@@ -1,17 +1,16 @@
 import express from "express"
 import http from "http"
-import { Server } from "socket.io"
+import { DisconnectReason, Server, Socket } from "socket.io"
 import cors from "cors"
 
 const app = express()
-
 app.use(cors())
 
 const server = http.createServer(app)
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://whiteboard-sigma.vercel.app/",
+  "https://whiteboard-sigma.vercel.app",
 ]
 
 const io = new Server(server, {
@@ -19,9 +18,11 @@ const io = new Server(server, {
     origin: allowedOrigins,
     methods: ["GET", "POST"],
   },
+  pingInterval: 10000,
+  pingTimeout: 10000,
 })
 
-type Point = { x: Number; y: number }
+type Point = { x: number; y: number }
 
 type DrawLine = {
   prevPoint: Point | null
@@ -29,17 +30,8 @@ type DrawLine = {
   color: string
 }
 
-io.on("connection", (socket: any) => {
+io.on("connection", (socket: Socket) => {
   console.log(`User Connected: ${socket.id}`)
-
-  // socket.on("join_room", (data) => {
-  //   socket.join(data);
-  // });
-
-  // socket.on("send_message", (data) => {
-  //   socket.to(data.room).emit("receive_message", data);
-  //   console.log(data)
-  // });
 
   socket.on("client-ready", () => {
     socket.broadcast.emit("get-canvas-state")
@@ -54,8 +46,13 @@ io.on("connection", (socket: any) => {
   socket.on("draw-line", ({ prevPoint, currentPoint, color }: DrawLine) => {
     socket.broadcast.emit("draw-line", { prevPoint, currentPoint, color })
   })
+
+  socket.on("disconnect", (reason: DisconnectReason) => {
+    console.log("User Disconnected:", socket.id, "reason:", reason)
+  })
 })
 
-server.listen(3001, () => {
-  console.log("Server listening on port 3001")
+const PORT = Number(process.env.PORT) || 3001
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server listening on port ${PORT}`)
 })

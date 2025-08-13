@@ -1,19 +1,20 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ChromePicker } from "react-color"
 import { io } from "socket.io-client"
 import { useDraw } from "@/hooks/useDraw"
 import { drawLine, type DrawLineProps } from "@/utils/drawLine"
+import ColorPalette from "@/components/color-palette"
 
-
-const socket = io(process.env.NEXT_PUBLIC_API_URL as string)
-console.log(process.env.NEXT_PUBLIC_API_URL)
-// const socket = io("http://localhost:3001")
+const socket = io(process.env.NEXT_PUBLIC_API_URL as string, {
+  transports: ["websocket"],
+  // Ensures the client actively closes when the page unloads (Socket.IO v4+)
+  closeOnBeforeunload: true,
+})
 
 export default function Home() {
   const { canvasRef, onMouseDown, clear } = useDraw(createLine)
-  const [color, setColor] = useState<string>("#000")
+  const [color, setColor] = useState<string>("#000000")
 
   function createLine({ prevPoint, currentPoint, ctx }: Draw) {
     socket.emit("draw-line", { prevPoint, currentPoint, color })
@@ -31,7 +32,6 @@ export default function Home() {
     })
 
     socket.on("canvas-state-from-server", (state: string) => {
-      console.log("state received")
       const img = new Image()
       img.src = state
       img.onload = () => {
@@ -58,18 +58,25 @@ export default function Home() {
   }, [canvasRef])
 
   return (
-    <main className="flex flex-col items-center justify-between p-24">
-      <div className="flex flex-row gap-2 mb-2">
+    <main className="flex flex-col items-center justify-between p-10 h-screen">
+      <div className="flex flex-row gap-10 mb-2 bg-gradient-to-t from-slate-400  to-indigo-200 p-2 rounded-xl">
         <button
           type="button"
-          className="p-2 border-2 border-red-800 text-red-800 hover:bg-red-800 hover:text-white m-2 rounded-md"
+          className={[
+            "relative h-8 w-8 rounded-md ring-1 ring-black/10 bg-white",
+            "hover:ring-black/30 focus:outline-none focus:ring-2 focus:ring-slate-500",
+          ].join(" ")}
           onClick={() => {
             socket.emit("clear")
           }}
         >
-          Clear
+          🗑️
         </button>
-        <ChromePicker color={color} onChange={(e: any) => setColor(e.hex)} />
+        <div
+          className="rounded-full h-8 w-8"
+          style={{ backgroundColor: color }}
+        ></div>
+        <ColorPalette value={color} onChange={setColor} />
       </div>
       <div className="w-screen flex justify-center">
         <canvas

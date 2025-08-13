@@ -1,0 +1,26 @@
+# fly.toml
+app = "whiteboard-cc-ws"     # <— change to a unique name
+primary_region = "mia"    # choose your closest region
+
+[build]
+  dockerfile = "server/Dockerfile"  # adjust if needed
+
+[env]
+  NODE_ENV = "production"
+
+[[services]]
+  internal_port = 3001
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  # (Optional) basic health check
+  [services.concurrency]
+    hard_limit = 100
+    soft_limit = 80
