@@ -4,13 +4,15 @@
   "main": "index.ts",
   "license": "MIT",
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "start": "nodemon index.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "nodemon": "^2.0.15",
-    "socket.io": "^4.4.1"
+    "socket.io": "^4.4.1",
+    "typescript": "^5.9.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.3"

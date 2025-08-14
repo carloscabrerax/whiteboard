@@ -1,5 +1,5 @@
 # fly.toml
-app = "whiteboard-cc-ws"     # <— change to a unique name
+app = "whiteboard-q1vwwq"     # <— change to a unique name
 primary_region = "mia"    # choose your closest region
 
 [build]
